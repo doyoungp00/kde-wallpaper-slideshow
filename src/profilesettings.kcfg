@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+  <!-- Settings of one profile: "default" for all screens, or a screen name. -->
+  <kcfgfile name="kde-wallpaper-slideshowrc">
+    <parameter name="profile"/>
+  </kcfgfile>
+
+  <group name="Profile $(profile)">
+    <entry name="folders" type="PathList"><default></default></entry>
+    <entry name="includeSubfolders" type="Bool"><default>true</default></entry>
+
+    <entry name="durationSec" type="Int"><default>30</default><min>1</min><max>86400</max></entry>
+    <entry name="freezeAnimationsOnPause" type="Bool"><default>false</default></entry>
+
+    <entry name="scaleMode" type="Enum">
+      <choices><choice name="Cover"/><choice name="Fit"/><choice name="Stretch"/></choices>
+      <default>Cover</default>
+    </entry>
+    <entry name="letterboxColor" type="Color"><default>#000000</default></entry>
+
+    <entry name="smartDuration" type="Bool"><default>true</default></entry>
+    <entry name="roundUpToLoops" type="Bool"><default>false</default></entry>
+    <entry name="maxDurationSec" type="Int"><default>120</default><min>1</min><max>86400</max></entry>
+
+    <entry name="videoEnabled" type="Bool"><default>true</default></entry>
+    <entry name="mute" type="Bool"><default>true</default></entry>
+    <entry name="volume" type="Int"><default>50</default><min>0</min><max>100</max></entry>
+
+    <entry name="playlistVisible" type="Bool"><default>true</default></entry>
+    <entry name="playlistCorner" type="Enum">
+      <choices><choice name="TopLeft"/><choice name="TopRight"/><choice name="BottomLeft"/><choice name="BottomRight"/></choices>
+      <default>BottomRight</default>
+    </entry>
+    <entry name="playlistMarginX" type="Int"><default>24</default><min>0</min><max>2000</max></entry>
+    <entry name="playlistMarginY" type="Int"><default>24</default><min>0</min><max>2000</max></entry>
+    <entry name="playlistWidth" type="Int"><default>380</default><min>160</min><max>4000</max></entry>
+    <entry name="playlistHeight" type="Int"><default>460</default><min>120</min><max>4000</max></entry>
+    <entry name="playlistTheme" type="Enum">
+      <choices><choice name="System"/><choice name="Light"/><choice name="Dark"/></choices>
+      <default>System</default>
+    </entry>
+    <entry name="playlistOpacity" type="Double"><default>0.85</default><min>0.1</min><max>1.0</max></entry>
+
+    <entry name="titleVisible" type="Bool"><default>false</default></entry>
+    <entry name="titleShowOnHover" type="Bool"><default>false</default></entry>
+    <!-- Empty for the system font. -->
+    <entry name="titleFontFamily" type="String"><default></default></entry>
+    <entry name="titleMarginTop" type="Int"><default>24</default><min>0</min><max>2000</max></entry>
+    <entry name="titleMarginRight" type="Int"><default>24</default><min>0</min><max>2000</max></entry>
+    <entry name="titleFontSize" type="Int"><default>20</default><min>6</min><max>400</max></entry>
+    <entry name="titleColor" type="Color"><default>#ffffff</default></entry>
+    <entry name="titleOutline" type="Bool"><default>true</default></entry>
+    <entry name="titleOutlineColor" type="Color"><default>#000000</default></entry>
+    <entry name="titleShadow" type="Bool"><default>true</default></entry>
+
+    <entry name="edgeStripWidth" type="Int"><default>12</default><min>2</min><max>64</max></entry>
+    <entry name="edgeHideDelayMs" type="Int"><default>1500</default><min>0</min><max>10000</max></entry>
+    <entry name="edgeTop" type="Bool"><default>true</default></entry>
+    <entry name="edgeBottom" type="Bool"><default>true</default></entry>
+    <entry name="edgeLeft" type="Bool"><default>true</default></entry>
+    <entry name="edgeRight" type="Bool"><default>true</default></entry>
+  </group>
+</kcfg>

@@ -1,0 +1,24 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: fedora:44
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: >
+          dnf install -y --setopt=install_weak_deps=False
+          gcc-c++ cmake ninja-build extra-cmake-modules
+          qt6-qtbase-devel qt6-qtdeclarative-devel layer-shell-qt-devel mpvqt-devel
+          kf6-kconfig-devel kf6-kcoreaddons-devel kf6-kdbusaddons-devel kf6-kglobalaccel-devel
+          kf6-knotifications-devel kf6-kstatusnotifieritem-devel kf6-kirigami-devel
+      - name: Build
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+      # bench_indexer fails when indexing 50k files is over budget.
+      - name: Test
+        run: ctest --test-dir build --output-on-failure

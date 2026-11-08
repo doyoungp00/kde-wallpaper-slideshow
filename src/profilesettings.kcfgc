@@ -1,0 +1,9 @@
+File=profilesettings.kcfg
+ClassName=ProfileSettings
+Mutators=true
+GenerateProperties=true
+Notifiers=true
+DefaultValueGetters=true
+ParentInConstructor=true
+QmlRegistration=true
+QmlUncreatable=true

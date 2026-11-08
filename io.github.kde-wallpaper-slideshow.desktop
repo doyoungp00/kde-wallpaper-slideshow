@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Wallpaper Slideshow
+Comment=A slideshow drawn over the Plasma wallpaper
+Exec=kde-wallpaper-slideshow
+Icon=preferences-desktop-wallpaper
+Categories=Qt;KDE;Graphics;Viewer;
+X-DBUS-ServiceName=io.github.kde-wallpaper-slideshow
+X-DBUS-StartupType=Unique
