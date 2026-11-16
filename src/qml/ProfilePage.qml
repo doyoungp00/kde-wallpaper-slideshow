@@ -275,6 +275,13 @@ QQC2.ScrollView {
                 onMoved: page.s.playlistOpacity = value
             }
 
+            QQC2.ComboBox {
+                Kirigami.FormData.label: "Search:"
+                model: ["File names only", "Subfolders only"]
+                currentIndex: page.s.playlistSearchSubfolders ? 1 : 0
+                onActivated: index => page.s.playlistSearchSubfolders = index === 1
+            }
+
             Kirigami.Separator {
                 Kirigami.FormData.isSection: true
                 Kirigami.FormData.label: "Filename"

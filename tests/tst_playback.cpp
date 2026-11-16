@@ -109,13 +109,23 @@ private Q_SLOTS:
                       {QStringLiteral("/other/c.jpg"), QStringLiteral("/root/cats/a.jpg"), QStringLiteral("/root/cats/kittens/b.jpg"), QStringLiteral("/root/d.jpg")},
                       1);
         PlaybackController c(&library, &m_settings);
+        m_settings.setPlaylistSearchSubfolders(true);
         c.setFilter(QStringLiteral("cats"));
         QCOMPARE(c.playlist()->filtered()->rowCount(), 2);
         c.setFilter(QStringLiteral("cats/kit"));
         QCOMPARE(c.playlist()->filtered()->rowCount(), 1);
-        // The library folders themselves aren't part of what is searched.
+        // The library folders themselves and the file names aren't part of what is searched.
         c.setFilter(QStringLiteral("o"));
         QCOMPARE(c.playlist()->filtered()->rowCount(), 0);
+        c.setFilter(QStringLiteral("jpg"));
+        QCOMPARE(c.playlist()->filtered()->rowCount(), 0);
+        // File name mode ignores the folders.
+        m_settings.setPlaylistSearchSubfolders(false);
+        QCOMPARE(c.playlist()->filtered()->rowCount(), 4);
+        c.setFilter(QStringLiteral("cats"));
+        QCOMPARE(c.playlist()->filtered()->rowCount(), 0);
+        c.setFilter(QStringLiteral("b."));
+        QCOMPARE(c.playlist()->filtered()->rowCount(), 1);
     }
 
     void relativePathStartsAtFolderName()

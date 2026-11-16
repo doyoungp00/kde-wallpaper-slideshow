@@ -23,9 +23,10 @@ public:
         FolderRole,
         CurrentRole,
         BadRole,
-        // Path below the library folder it was found in, which the search matches.
-        SearchRole,
-        // That library folder's name followed by SearchRole, e.g. "Wallpapers/sub/a.png".
+        // Folders between the library folder it was found in and the file, e.g.
+        // "sub/deeper"; empty for a file directly in the library folder.
+        SubfolderRole,
+        // The library folder's name followed by the path below it, e.g. "Wallpapers/sub/a.png".
         RelativePathRole,
         PathRole,
     };
@@ -48,10 +49,10 @@ public:
     void setCurrentRow(int row);
     void entryChanged(int row);
 
-    // Case-insensitive substring of the path below the library folder, or regular
-    // expression when regex is set; empty shows everything. Returns false for an
-    // invalid expression, which then matches nothing.
-    bool setFilter(const QString &filter, bool regex);
+    // Case-insensitive substring of the file name, or of the subfolders when
+    // subfolders is set; a regular expression when regex is set. Empty shows
+    // everything. Returns false for an invalid expression, which then matches nothing.
+    bool setFilter(const QString &filter, bool regex, bool subfolders);
     // Whether row passes the filter. A filter that matches nothing is ignored, so
     // playback never runs dry.
     bool matches(int row) const;

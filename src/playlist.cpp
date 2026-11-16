@@ -8,7 +8,6 @@ Playlist::Playlist(Library *library, QObject *parent)
     , m_library(library)
 {
     m_filtered.setSourceModel(this);
-    m_filtered.setFilterRole(SearchRole);
     m_filtered.setFilterCaseSensitivity(Qt::CaseInsensitive);
     rebuild();
 }
@@ -42,8 +41,10 @@ QVariant Playlist::data(const QModelIndex &index, int role) const
         return index.row() == m_currentRow;
     case BadRole:
         return e.bad;
-    case SearchRole:
-        return e.path.mid(folderPrefix(e.path));
+    case SubfolderRole: {
+        const qsizetype root = folderPrefix(e.path);
+        return slash > root ? e.path.mid(root, slash - root) : QString();
+    }
     case RelativePathRole: {
         const qsizetype root = folderPrefix(e.path);
         // The folder's own name is the segment before its trailing slash.
@@ -120,8 +121,9 @@ void Playlist::entryChanged(int row)
     }
 }
 
-bool Playlist::setFilter(const QString &filter, bool regex)
+bool Playlist::setFilter(const QString &filter, bool regex, bool subfolders)
 {
+    m_filtered.setFilterRole(subfolders ? SubfolderRole : NameRole);
     if (!regex) {
         m_filtered.setFilterFixedString(filter);
         return true;

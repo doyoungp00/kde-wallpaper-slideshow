@@ -21,6 +21,55 @@ Rectangle {
         itemMenu.popup()
     }
 
+    // Applies the typed search at once, then change, which alters how it matches.
+    function changeSearch(change) {
+        filterDelay.stop()
+        autoScrolling = true
+        controller.filter = search.text
+        change()
+        autoScrolling = false
+    }
+
+    // Toggle beside the search field, sized to it where used.
+    component SearchToggle: ToolButton {
+        id: toggle
+        font.bold: true
+        // Not checkable: checked is bound to the state, so it follows other screens' toggles too.
+        readonly property color ink: checked ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
+        // Drawn by hand: the desktop style's flat button is hard to see as a toggle.
+        contentItem: Item {
+            Text {
+                anchors.fill: parent
+                visible: toggle.icon.name === ""
+                text: toggle.text
+                font: toggle.font
+                color: toggle.ink
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+            Kirigami.Icon {
+                anchors.centerIn: parent
+                width: Kirigami.Units.iconSizes.small
+                height: width
+                visible: toggle.icon.name !== ""
+                source: toggle.icon.name
+                isMask: true
+                color: toggle.ink
+            }
+        }
+        background: Rectangle {
+            readonly property color ink: Kirigami.Theme.textColor
+            radius: 4
+            color: toggle.checked ? Kirigami.Theme.highlightColor
+                 : Qt.rgba(ink.r, ink.g, ink.b, toggle.down ? 0.25 : toggle.hovered ? 0.15 : 0.06)
+            opacity: toggle.checked && toggle.down ? 0.75 : 1
+            border.color: toggle.checked ? Kirigami.Theme.highlightColor : Qt.rgba(ink.r, ink.g, ink.b, 0.45)
+            border.width: 1
+        }
+        ToolTip.visible: hovered
+        ToolTip.delay: 600
+    }
+
     function scrollToCurrent() {
         if (userScrolled) {
             return
@@ -76,7 +125,8 @@ Rectangle {
                 Layout.fillWidth: true
                 // The desktop style pins text fields to the system colors; take the panel's.
                 Kirigami.Theme.inherit: true
-                placeholderText: panel.controller.filterRegex ? "Search (regular expression)" : "Search"
+                placeholderText: (panel.settings.playlistSearchSubfolders ? "Search subfolders" : "Search file names")
+                                 + (panel.controller.filterRegex ? " (regular expression)" : "")
                 color: panel.controller.filterValid ? Kirigami.Theme.textColor : Kirigami.Theme.negativeTextColor
                 text: panel.controller.filter
                 onTextEdited: filterDelay.restart()
@@ -93,41 +143,22 @@ Rectangle {
                 }
             }
 
-            ToolButton {
-                id: regexButton
+            SearchToggle {
                 Layout.preferredHeight: search.height
                 Layout.preferredWidth: search.height
                 text: ".*"
-                font.bold: true
-                // Not checkable, so the binding follows other screens' toggles too.
                 checked: panel.controller.filterRegex
-                onClicked: {
-                    filterDelay.stop()
-                    panel.autoScrolling = true
-                    panel.controller.filter = search.text
-                    panel.controller.filterRegex = !panel.controller.filterRegex
-                    panel.autoScrolling = false
-                }
-                // Drawn by hand: the desktop style's flat button is hard to see as a toggle.
-                contentItem: Text {
-                    text: regexButton.text
-                    font: regexButton.font
-                    color: regexButton.checked ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                }
-                background: Rectangle {
-                    readonly property color ink: Kirigami.Theme.textColor
-                    radius: 4
-                    color: regexButton.checked ? Kirigami.Theme.highlightColor
-                         : Qt.rgba(ink.r, ink.g, ink.b, regexButton.down ? 0.25 : regexButton.hovered ? 0.15 : 0.06)
-                    opacity: regexButton.checked && regexButton.down ? 0.75 : 1
-                    border.color: regexButton.checked ? Kirigami.Theme.highlightColor : Qt.rgba(ink.r, ink.g, ink.b, 0.45)
-                    border.width: 1
-                }
+                onClicked: panel.changeSearch(() => panel.controller.filterRegex = !panel.controller.filterRegex)
                 ToolTip.text: "Use regular expression"
-                ToolTip.visible: hovered
-                ToolTip.delay: 600
+            }
+
+            SearchToggle {
+                Layout.preferredHeight: search.height
+                Layout.preferredWidth: search.height
+                icon.name: "folder"
+                checked: panel.settings.playlistSearchSubfolders
+                onClicked: panel.changeSearch(() => panel.settings.playlistSearchSubfolders = !panel.settings.playlistSearchSubfolders)
+                ToolTip.text: "Search subfolders instead of file names"
             }
         }
 
@@ -138,7 +169,7 @@ Rectangle {
             readonly property int total: all ? panel.playlist.count : list.count
             readonly property int index: {
                 // filteredRow isn't notifiable; reading the search makes a new one re-run this.
-                const search = [panel.controller.filter, panel.controller.filterRegex]
+                const search = [panel.controller.filter, panel.controller.filterRegex, panel.settings.playlistSearchSubfolders]
                 const row = panel.controller.currentRow
                 return (all ? row : panel.playlist.filteredRow(row)) + 1
             }
