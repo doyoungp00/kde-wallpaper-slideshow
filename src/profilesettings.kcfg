@@ -42,6 +42,10 @@
       <default>System</default>
     </entry>
     <entry name="playlistOpacity" type="Double"><default>0.85</default><min>0.1</min><max>1.0</max></entry>
+    <entry name="playlistDoubleClick" type="Enum">
+      <choices><choice name="Nothing"/><choice name="ShowInFileManager"/><choice name="OpenWithDefaultApplication"/></choices>
+      <default>Nothing</default>
+    </entry>
     <!-- What the playlist search matches: the path below the library folder, only
          the file name, or only the subfolders. -->
     <entry name="playlistSearchScope" type="Enum">

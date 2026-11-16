@@ -77,6 +77,28 @@ Rectangle {
         ToolTip.delay: 600
     }
 
+    // Plays row, at once unless a double click has an action: then after the double
+    // click interval, so jumping and scrolling don't move the item from under the
+    // second click.
+    function itemClicked(row) {
+        if (settings.playlistDoubleClick === 0) {
+            controller.jumpTo(row)
+        } else {
+            clickDelay.row = row
+            clickDelay.restart()
+        }
+    }
+
+    function itemDoubleClicked(path) {
+        clickDelay.stop()
+        // playlistDoubleClick: 0 nothing, 1 show in file manager, 2 open with default application
+        if (settings.playlistDoubleClick === 1) {
+            App.revealFile(path)
+        } else if (settings.playlistDoubleClick === 2) {
+            App.openFile(path)
+        }
+    }
+
     function scrollToCurrent() {
         if (userScrolled) {
             return
@@ -241,7 +263,15 @@ Rectangle {
                         if (event.button === Qt.RightButton) {
                             panel.showItemMenu(row.path)
                         } else {
-                            panel.controller.jumpTo(row.number - 1)
+                            panel.itemClicked(row.number - 1)
+                        }
+                    }
+                    onDoubleClicked: event => {
+                        if (event.button === Qt.LeftButton && panel.settings.playlistDoubleClick !== 0) {
+                            panel.itemDoubleClicked(row.path)
+                        } else {
+                            // Taken as a second single click.
+                            event.accepted = false
                         }
                     }
                 }
@@ -268,6 +298,13 @@ Rectangle {
             icon.name: "document-open"
             onTriggered: App.openFile(itemMenu.path)
         }
+    }
+
+    Timer {
+        id: clickDelay
+        property int row: -1
+        interval: Qt.styleHints.mouseDoubleClickInterval
+        onTriggered: panel.controller.jumpTo(row)
     }
 
     Timer {

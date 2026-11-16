@@ -276,6 +276,13 @@ QQC2.ScrollView {
             }
 
             QQC2.ComboBox {
+                Kirigami.FormData.label: "Double-click:"
+                model: ["Nothing", "Show in File Manager", "Open with Default Application"]
+                currentIndex: page.s.playlistDoubleClick
+                onActivated: index => page.s.playlistDoubleClick = index
+            }
+
+            QQC2.ComboBox {
                 Kirigami.FormData.label: "Search:"
                 model: ["Full path", "File names only", "Subfolders only"]
                 currentIndex: page.s.playlistSearchScope
