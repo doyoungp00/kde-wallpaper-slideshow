@@ -42,8 +42,12 @@
       <default>System</default>
     </entry>
     <entry name="playlistOpacity" type="Double"><default>0.85</default><min>0.1</min><max>1.0</max></entry>
-    <!-- Whether the search matches the subfolders of a file rather than its name. -->
-    <entry name="playlistSearchSubfolders" type="Bool"><default>false</default></entry>
+    <!-- What the playlist search matches: the path below the library folder, only
+         the file name, or only the subfolders. -->
+    <entry name="playlistSearchScope" type="Enum">
+      <choices><choice name="FullPath"/><choice name="FileNames"/><choice name="Subfolders"/></choices>
+      <default>FullPath</default>
+    </entry>
 
     <entry name="titleVisible" type="Bool"><default>false</default></entry>
     <entry name="titleShowOnHover" type="Bool"><default>false</default></entry>

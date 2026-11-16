@@ -21,6 +21,13 @@ Rectangle {
         itemMenu.popup()
     }
 
+    // By playlistSearchScope.
+    readonly property var searchScopes: [
+        {icon: "view-list-tree", placeholder: "Search", tooltip: "Searching the full path"},
+        {icon: "text-x-generic", placeholder: "Search file names", tooltip: "Searching file names only"},
+        {icon: "folder", placeholder: "Search subfolders", tooltip: "Searching subfolders only"}
+    ]
+
     // Applies the typed search at once, then change, which alters how it matches.
     function changeSearch(change) {
         filterDelay.stop()
@@ -125,7 +132,7 @@ Rectangle {
                 Layout.fillWidth: true
                 // The desktop style pins text fields to the system colors; take the panel's.
                 Kirigami.Theme.inherit: true
-                placeholderText: (panel.settings.playlistSearchSubfolders ? "Search subfolders" : "Search file names")
+                placeholderText: panel.searchScopes[panel.settings.playlistSearchScope].placeholder
                                  + (panel.controller.filterRegex ? " (regular expression)" : "")
                 color: panel.controller.filterValid ? Kirigami.Theme.textColor : Kirigami.Theme.negativeTextColor
                 text: panel.controller.filter
@@ -155,10 +162,12 @@ Rectangle {
             SearchToggle {
                 Layout.preferredHeight: search.height
                 Layout.preferredWidth: search.height
-                icon.name: "folder"
-                checked: panel.settings.playlistSearchSubfolders
-                onClicked: panel.changeSearch(() => panel.settings.playlistSearchSubfolders = !panel.settings.playlistSearchSubfolders)
-                ToolTip.text: "Search subfolders instead of file names"
+                readonly property var scope: panel.searchScopes[panel.settings.playlistSearchScope]
+                icon.name: scope.icon
+                // Lit while the search leaves part of the path out.
+                checked: panel.settings.playlistSearchScope !== 0
+                onClicked: panel.changeSearch(() => panel.settings.playlistSearchScope = (panel.settings.playlistSearchScope + 1) % panel.searchScopes.length)
+                ToolTip.text: scope.tooltip + " (click to switch)"
             }
         }
 
@@ -169,7 +178,7 @@ Rectangle {
             readonly property int total: all ? panel.playlist.count : list.count
             readonly property int index: {
                 // filteredRow isn't notifiable; reading the search makes a new one re-run this.
-                const search = [panel.controller.filter, panel.controller.filterRegex, panel.settings.playlistSearchSubfolders]
+                const search = [panel.controller.filter, panel.controller.filterRegex, panel.settings.playlistSearchScope]
                 const row = panel.controller.currentRow
                 return (all ? row : panel.playlist.filteredRow(row)) + 1
             }

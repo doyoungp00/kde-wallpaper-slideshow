@@ -58,7 +58,7 @@ PlaybackController::PlaybackController(Library *library, ProfileSettings *settin
                         &ProfileSettings::roundUpToLoopsChanged}) {
         connect(m_settings, signal, this, &PlaybackController::updateMedia);
     }
-    connect(m_settings, &ProfileSettings::playlistSearchSubfoldersChanged, this, &PlaybackController::applyFilter);
+    connect(m_settings, &ProfileSettings::playlistSearchScopeChanged, this, &PlaybackController::applyFilter);
     connect(m_settings, &ProfileSettings::freezeAnimationsOnPauseChanged, this, &PlaybackController::updateClock);
 }
 
@@ -90,7 +90,16 @@ void PlaybackController::setFilterRegex(bool regex)
 
 void PlaybackController::applyFilter()
 {
-    m_filterValid = m_playlist->setFilter(m_filter, m_filterRegex, m_settings->playlistSearchSubfolders());
+    int role = Playlist::InnerPathRole;
+    switch (m_settings->playlistSearchScope()) {
+    case ProfileSettings::EnumPlaylistSearchScope::FileNames:
+        role = Playlist::NameRole;
+        break;
+    case ProfileSettings::EnumPlaylistSearchScope::Subfolders:
+        role = Playlist::SubfolderRole;
+        break;
+    }
+    m_filterValid = m_playlist->setFilter(m_filter, m_filterRegex, role);
     // The current item plays out its time; what follows comes from the matches.
     updateNeighbors();
     Q_EMIT filterChanged();

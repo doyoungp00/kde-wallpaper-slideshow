@@ -41,6 +41,8 @@ QVariant Playlist::data(const QModelIndex &index, int role) const
         return index.row() == m_currentRow;
     case BadRole:
         return e.bad;
+    case InnerPathRole:
+        return e.path.mid(folderPrefix(e.path));
     case SubfolderRole: {
         const qsizetype root = folderPrefix(e.path);
         return slash > root ? e.path.mid(root, slash - root) : QString();
@@ -121,14 +123,22 @@ void Playlist::entryChanged(int row)
     }
 }
 
-bool Playlist::setFilter(const QString &filter, bool regex, bool subfolders)
+bool Playlist::setFilter(const QString &filter, bool regex, int role)
 {
-    m_filtered.setFilterRole(subfolders ? SubfolderRole : NameRole);
+    m_filtered.setFilterRole(role);
+    QString pattern = filter;
     if (!regex) {
-        m_filtered.setFilterFixedString(filter);
-        return true;
+        // A lookahead per word, so each may match anywhere.
+        pattern.clear();
+        const QStringList words = filter.split(QLatin1Char(' '), Qt::SkipEmptyParts);
+        for (const QString &word : words) {
+            pattern += QStringLiteral("(?=.*%1)").arg(QRegularExpression::escape(word));
+        }
+        if (!pattern.isEmpty()) {
+            pattern.prepend(QLatin1Char('^'));
+        }
     }
-    const QRegularExpression re(filter, QRegularExpression::CaseInsensitiveOption);
+    const QRegularExpression re(pattern, QRegularExpression::CaseInsensitiveOption);
     m_filtered.setFilterRegularExpression(re);
     return re.isValid();
 }

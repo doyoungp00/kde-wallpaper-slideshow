@@ -286,5 +286,6 @@ int Profile::applySettings(ProfileSettings *settings, const QJsonObject &values)
                                  {QStringLiteral("scaleMode"), ProfileSettings::EnumScaleMode::COUNT},
                                  {QStringLiteral("playlistCorner"), ProfileSettings::EnumPlaylistCorner::COUNT},
                                  {QStringLiteral("playlistTheme"), ProfileSettings::EnumPlaylistTheme::COUNT},
+                                 {QStringLiteral("playlistSearchScope"), ProfileSettings::EnumPlaylistSearchScope::COUNT},
                              });
 }

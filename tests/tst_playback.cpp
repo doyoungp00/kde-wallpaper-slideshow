@@ -102,30 +102,67 @@ private Q_SLOTS:
         QCOMPARE(c.currentRow(), 1);
     }
 
-    void filterMatchesSubfolders()
+    void filterScopes()
     {
         Library library;
         library.reset({QStringLiteral("/root/"), QStringLiteral("/other")},
                       {QStringLiteral("/other/c.jpg"), QStringLiteral("/root/cats/a.jpg"), QStringLiteral("/root/cats/kittens/b.jpg"), QStringLiteral("/root/d.jpg")},
                       1);
         PlaybackController c(&library, &m_settings);
-        m_settings.setPlaylistSearchSubfolders(true);
+        const auto count = [&c] {
+            return c.playlist()->filtered()->rowCount();
+        };
+        // Full path, the default: the subfolders and the file name together.
+        QCOMPARE(m_settings.playlistSearchScope(), int(ProfileSettings::EnumPlaylistSearchScope::FullPath));
         c.setFilter(QStringLiteral("cats"));
-        QCOMPARE(c.playlist()->filtered()->rowCount(), 2);
-        c.setFilter(QStringLiteral("cats/kit"));
-        QCOMPARE(c.playlist()->filtered()->rowCount(), 1);
-        // The library folders themselves and the file names aren't part of what is searched.
+        QCOMPARE(count(), 2);
+        c.setFilter(QStringLiteral("kittens/b"));
+        QCOMPARE(count(), 1);
+        // The library folders themselves aren't part of what is searched.
         c.setFilter(QStringLiteral("o"));
-        QCOMPARE(c.playlist()->filtered()->rowCount(), 0);
+        QCOMPARE(count(), 0);
+
+        m_settings.setPlaylistSearchScope(ProfileSettings::EnumPlaylistSearchScope::Subfolders);
+        c.setFilter(QStringLiteral("cats/kit"));
+        QCOMPARE(count(), 1);
         c.setFilter(QStringLiteral("jpg"));
-        QCOMPARE(c.playlist()->filtered()->rowCount(), 0);
-        // File name mode ignores the folders.
-        m_settings.setPlaylistSearchSubfolders(false);
-        QCOMPARE(c.playlist()->filtered()->rowCount(), 4);
+        QCOMPARE(count(), 0);
+
+        m_settings.setPlaylistSearchScope(ProfileSettings::EnumPlaylistSearchScope::FileNames);
+        QCOMPARE(count(), 4);
         c.setFilter(QStringLiteral("cats"));
-        QCOMPARE(c.playlist()->filtered()->rowCount(), 0);
+        QCOMPARE(count(), 0);
         c.setFilter(QStringLiteral("b."));
-        QCOMPARE(c.playlist()->filtered()->rowCount(), 1);
+        QCOMPARE(count(), 1);
+        m_settings.setPlaylistSearchScope(ProfileSettings::EnumPlaylistSearchScope::FullPath);
+    }
+
+    void filterWordsMatchInAnyOrder()
+    {
+        Library library;
+        library.reset({QStringLiteral("/root")},
+                      {QStringLiteral("/root/cats/kittens/sunset-04.jpg"), QStringLiteral("/root/cats/sunrise.jpg"), QStringLiteral("/root/dogs/sunset+1.jpg")},
+                      1);
+        PlaybackController c(&library, &m_settings);
+        const auto count = [&c] {
+            return c.playlist()->filtered()->rowCount();
+        };
+        c.setFilter(QStringLiteral("kit sun"));
+        QCOMPARE(count(), 1);
+        c.setFilter(QStringLiteral("  SUN   kit "));
+        QCOMPARE(count(), 1);
+        c.setFilter(QStringLiteral("cats sun"));
+        QCOMPARE(count(), 2);
+        // Words are plain text, not expressions.
+        c.setFilter(QStringLiteral("t+1"));
+        QCOMPARE(count(), 1);
+        c.setFilter(QStringLiteral("   "));
+        QCOMPARE(count(), 3);
+        // Each word matches within the scope alone.
+        m_settings.setPlaylistSearchScope(ProfileSettings::EnumPlaylistSearchScope::FileNames);
+        c.setFilter(QStringLiteral("kit sun"));
+        QCOMPARE(count(), 0);
+        m_settings.setPlaylistSearchScope(ProfileSettings::EnumPlaylistSearchScope::FullPath);
     }
 
     void relativePathStartsAtFolderName()
