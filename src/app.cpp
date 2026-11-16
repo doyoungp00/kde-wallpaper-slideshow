@@ -522,6 +522,13 @@ void App::revealFile(const QString &path)
     });
 }
 
+void App::openFile(const QString &path)
+{
+    if (!QDesktopServices::openUrl(QUrl::fromLocalFile(path))) {
+        qWarning("Cannot open %s", qPrintable(path));
+    }
+}
+
 void App::setInputRegion(QWindow *window, const QVariantList &rects)
 {
     if (!window) {

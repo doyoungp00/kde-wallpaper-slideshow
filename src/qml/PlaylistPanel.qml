@@ -222,6 +222,12 @@ Rectangle {
             icon.name: "document-open-folder"
             onTriggered: App.revealFile(itemMenu.path)
         }
+
+        MenuItem {
+            text: "Open with Default Application"
+            icon.name: "document-open"
+            onTriggered: App.openFile(itemMenu.path)
+        }
     }
 
     Timer {

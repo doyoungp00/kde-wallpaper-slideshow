@@ -68,6 +68,8 @@ public:
     Q_INVOKABLE void setScreenEnabled(const QString &name, bool enabled);
     // Opens the file manager with path selected, or its folder when that fails.
     Q_INVOKABLE void revealFile(const QString &path);
+    // Opens path in the program associated with its type.
+    Q_INVOKABLE void openFile(const QString &path);
     // Writes all settings to a settings file: the app-wide ones and every profile,
     // including those of screens that aren't connected. Returns an error, empty on success.
     Q_INVOKABLE QString exportSettings(const QUrl &file) const;
