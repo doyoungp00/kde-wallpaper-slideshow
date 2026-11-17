@@ -93,7 +93,7 @@ Kirigami.ApplicationWindow {
                             onToggled: root.s.separateScreens = checked
                         }
 
-                        ColumnLayout {
+                        FormColumn {
                             Kirigami.FormData.label: "Show on:"
                             Kirigami.FormData.labelAlignment: Qt.AlignTop
                             Repeater {

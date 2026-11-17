@@ -31,6 +31,7 @@ qt_add_qml_module(kde-wallpaper-slideshow
     QML_FILES
         qml/CurrentTitle.qml
         qml/EdgeBar.qml
+        qml/FormColumn.qml
         qml/MediaSlot.qml
         qml/OverlayUI.qml
         qml/PlaylistPanel.qml

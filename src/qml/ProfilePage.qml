@@ -35,7 +35,7 @@ QQC2.ScrollView {
                 Kirigami.FormData.label: "Library"
             }
 
-            ColumnLayout {
+            FormColumn {
                 Kirigami.FormData.label: "Folders:"
                 Kirigami.FormData.labelAlignment: Qt.AlignTop
                 Layout.fillWidth: true
