@@ -154,6 +154,13 @@ Kirigami.ApplicationWindow {
                         }
 
                         QQC2.CheckBox {
+                            text: "Also while paused, if a video keeps playing"
+                            enabled: root.s.preventSleep || root.s.preventScreenOff
+                            checked: root.s.preventWhilePausedVideo
+                            onToggled: root.s.preventWhilePausedVideo = checked
+                        }
+
+                        QQC2.CheckBox {
                             text: "Pause after sleep or screen lock"
                             checked: root.s.pauseOnSleepOrLock
                             onToggled: root.s.pauseOnSleepOrLock = checked

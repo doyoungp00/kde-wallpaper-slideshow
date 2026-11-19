@@ -108,6 +108,9 @@ public:
         return m_filterValid;
     }
     bool animationsRunning() const;
+    // Whether the current item is a video that is playing: animations run and the
+    // clock may be paused. Changes with animationsRunningChanged and currentMediaChanged.
+    bool videoPlaying() const;
     double progress() const;
     qint64 elapsedMs() const;
 

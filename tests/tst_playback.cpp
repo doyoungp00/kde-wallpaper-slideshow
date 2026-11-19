@@ -22,6 +22,27 @@ private Q_SLOTS:
         m_library.reset({QStringLiteral("/r")}, paths, 5);
     }
 
+    void videoPlayingWhilePaused()
+    {
+        Library library;
+        library.reset({QStringLiteral("/v")}, {QStringLiteral("/v/a.jpg"), QStringLiteral("/v/b.mp4")}, 1);
+        ProfileSettings settings{QStringLiteral("video")};
+        PlaybackController c(&library, &settings);
+        const int videoRow = library.at(0).path.endsWith(QLatin1String(".mp4")) ? 0 : 1;
+        c.setSuspended(false);
+        c.jumpTo(videoRow);
+        c.setPaused(true);
+        QVERIFY(c.videoPlaying());
+        settings.setFreezeAnimationsOnPause(true);
+        QVERIFY(!c.videoPlaying());
+        settings.setFreezeAnimationsOnPause(false);
+        c.setSuspended(true);
+        QVERIFY(!c.videoPlaying());
+        c.setSuspended(false);
+        c.jumpTo(1 - videoRow);
+        QVERIFY(!c.videoPlaying());
+    }
+
     void unfilteredSteps()
     {
         PlaybackController c(&m_library, &m_settings);

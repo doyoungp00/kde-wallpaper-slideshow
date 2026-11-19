@@ -129,6 +129,11 @@ bool PlaybackController::animationsRunning() const
     return m_animationsRunning;
 }
 
+bool PlaybackController::videoPlaying() const
+{
+    return m_animationsRunning && m_kind == QLatin1String("video");
+}
+
 qint64 PlaybackController::elapsedMs() const
 {
     return m_accumulatedMs + (m_wasTicking ? m_clock.elapsed() : 0);

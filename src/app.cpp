@@ -82,6 +82,7 @@ App::App(QQmlEngine *engine, QObject *parent)
     connect(s, &Settings::pauseOnFullscreenChanged, this, &App::updateFullscreenWatch);
     connect(s, &Settings::preventSleepChanged, this, &App::updateSuspension);
     connect(s, &Settings::preventScreenOffChanged, this, &App::updateSuspension);
+    connect(s, &Settings::preventWhilePausedVideoChanged, this, &App::updateSuspension);
     connect(s, &Settings::autostartChanged, this, &App::writeAutostart);
 
     connect(qApp, &QGuiApplication::screenAdded, this, [this] {
@@ -238,6 +239,10 @@ void App::updateProfiles()
         connect(profile->controller(), &PlaybackController::currentChanged, this, &App::statusChanged);
         connect(profile->controller(), &PlaybackController::pausedChanged, this, &App::statusChanged);
         connect(profile->controller(), &PlaybackController::pausedChanged, this, &App::updateSuspension);
+        // A video can keep playing while paused, which may hold the inhibitions.
+        // Queued: updateSuspension itself changes animationsRunning while it runs.
+        connect(profile->controller(), &PlaybackController::animationsRunningChanged, this, &App::updateSuspension, Qt::QueuedConnection);
+        connect(profile->controller(), &PlaybackController::currentMediaChanged, this, &App::updateSuspension, Qt::QueuedConnection);
         connect(profile, &Profile::folderErrorChanged, this, [this, profile] {
             if (!profile->folderError().isEmpty() && !profile->settings()->folders().isEmpty()) {
                 KNotification::event(KNotification::Error,
@@ -345,8 +350,10 @@ void App::updateSuspension()
             return v.profile == profile;
         });
         const bool suspended = !m_running || m_hidden || power || !shown;
-        profile->controller()->setSuspended(suspended);
-        playing = playing || (!suspended && !profile->controller()->paused());
+        PlaybackController *controller = profile->controller();
+        controller->setSuspended(suspended);
+        const bool pausedVideo = Settings::preventWhilePausedVideo() && controller->videoPlaying();
+        playing = playing || (!suspended && (!controller->paused() || pausedVideo));
     }
     // Plasma's screensaver inhibition also keeps the screen from dimming and turning
     // off. The power management one only blocks idle sleep, not sleep the user asks for.

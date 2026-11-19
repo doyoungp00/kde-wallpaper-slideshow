@@ -37,8 +37,9 @@ playlist and controls, and plays independently. A monitor's settings start as a 
 the "All screens" ones.
 
 The Power section of the General tab can keep the computer from sleeping, and the screen
-from turning off or locking, while a slideshow plays. Sleep you start yourself, or closing
-the lid, still works. It can also pause or hide the slideshow when the screen locks or the
+from turning off or locking, while a slideshow plays. Optionally this also holds while the
+slideshow is paused but a video keeps playing (when "Freeze animations and videos while
+paused" is off). Sleep you start yourself, or closing the lid, still works. It can also pause or hide the slideshow when the screen locks or the
 computer goes to sleep.
 
 The Filename section of each tab can show the current file's name in the top right
