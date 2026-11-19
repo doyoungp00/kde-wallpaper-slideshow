@@ -19,6 +19,8 @@ TrayController::TrayController(App *app)
     auto *menu = new QMenu;
     m_playPause = menu->addAction(QString(), app, &App::togglePause);
     m_hide = menu->addAction(QString(), app, &App::toggleHidden);
+    menu->addSeparator();
+    menu->addAction(QIcon::fromTheme(QStringLiteral("configure")), QStringLiteral("Settings…"), app, &App::showSettings);
     menu->addAction(QIcon::fromTheme(QStringLiteral("application-exit")), QStringLiteral("Exit"), app, &App::quit);
     m_item->setContextMenu(menu);
 
