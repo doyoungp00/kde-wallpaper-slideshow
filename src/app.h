@@ -60,6 +60,8 @@ public:
     // "<number>. <filename>" of the primary screen's item.
     QString currentTitle() const;
 
+    // Pauses or resumes every profile.
+    void setPaused(bool paused);
     Q_INVOKABLE void togglePause();
     Q_INVOKABLE void toggleHidden();
     Q_INVOKABLE void showSettings();

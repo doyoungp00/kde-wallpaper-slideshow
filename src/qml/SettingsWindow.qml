@@ -11,6 +11,39 @@ Kirigami.ApplicationWindow {
     id: root
 
     readonly property var s: App.settings
+    // The trayClick and trayDoubleClick choices, in settings.kcfg order.
+    readonly property var trayActions: [
+        {text: "Nothing", icon: "action-unavailable-symbolic"},
+        {text: "Open or close settings", icon: "configure"},
+        {text: "Play", icon: "media-playback-start"},
+        {text: "Pause", icon: "media-playback-pause"},
+        {text: "Previous", icon: "media-skip-backward"},
+        {text: "Next", icon: "media-skip-forward"},
+        {text: "Go to start of playlist", icon: "go-first"},
+        {text: "Go to end of playlist", icon: "go-last"},
+        {text: "Shuffle", icon: "media-playlist-shuffle"},
+        {text: "Rescan folders", icon: "view-refresh"},
+        {text: "Show or hide", icon: "visibility"},
+        {text: "Show", icon: "view-visible"},
+        {text: "Hide", icon: "view-hidden"},
+        {text: "Mute or unmute", icon: "audio-volume-muted"},
+        {text: "Prevent lock and sleep, or allow them", icon: "system-suspend-inhibited"}
+    ]
+
+    // A tray action picker: each choice with its icon, in the list and the box.
+    component TrayActionBox: QQC2.ComboBox {
+        id: box
+        model: root.trayActions
+        textRole: "text"
+        Kirigami.StyleHints.iconName: currentIndex >= 0 ? root.trayActions[currentIndex].icon : ""
+        delegate: QQC2.MenuItem {
+            required property var modelData
+            required property int index
+            text: modelData.text
+            icon.name: modelData.icon
+            highlighted: box.highlightedIndex === index
+        }
+    }
 
     title: "Wallpaper Slideshow"
     width: Kirigami.Units.gridUnit * 34
@@ -170,6 +203,23 @@ Kirigami.ApplicationWindow {
                             text: "Hide after sleep or screen lock"
                             checked: root.s.hideOnSleepOrLock
                             onToggled: root.s.hideOnSleepOrLock = checked
+                        }
+
+                        Kirigami.Separator {
+                            Kirigami.FormData.isSection: true
+                            Kirigami.FormData.label: "Tray Icon"
+                        }
+
+                        TrayActionBox {
+                            Kirigami.FormData.label: "Click:"
+                            currentIndex: root.s.trayClick
+                            onActivated: index => root.s.trayClick = index
+                        }
+
+                        TrayActionBox {
+                            Kirigami.FormData.label: "Double-click:"
+                            currentIndex: root.s.trayDoubleClick
+                            onActivated: index => root.s.trayDoubleClick = index
                         }
 
                         Kirigami.Separator {

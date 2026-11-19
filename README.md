@@ -42,6 +42,13 @@ slideshow is paused but a video keeps playing (when "Freeze animations and video
 paused" is off). Sleep you start yourself, or closing the lid, still works. It can also pause or hide the slideshow when the screen locks or the
 computer goes to sleep.
 
+The Tray Icon section of the General tab sets what clicking and double-clicking the
+tray icon do: open or close settings (the default for a click), play, pause, previous,
+next, start or end of the playlist, shuffle, rescan folders, show or hide, mute or
+unmute, or turn preventing lock and sleep on or off. Previous, next, start and end act
+on the primary screen; the others on every screen. When a double-click action is set,
+a single click waits the system's double-click interval before it acts.
+
 The Filename section of each tab can show the current file's name in the top right
 corner, all the time or only when the pointer comes near it, with a choice of margins,
 font, text size, fill and border colors and a drop shadow. In the hover mode, that corner takes
@@ -61,7 +68,7 @@ and Import: importing a file there applies it to that screen only, using the pro
 the file for that screen, else its only profile, else its "All screens" one. Imported
 settings are saved like ones changed in the window. Entries that are unknown or of the
 wrong type are left out, and numbers are clamped to their allowed range. Enum settings
-(`scaleMode`, `playlistCorner`, `playlistTheme`) are stored as the index of the choice.
+(`scaleMode`, `playlistCorner`, `playlistTheme`, `trayClick`, `trayDoubleClick`) are stored as the index of the choice.
 
 - Settings are in `~/.config/kde-wallpaper-slideshowrc` (`[General]` and one
   `[Profile <name>]` group per tab).

@@ -403,13 +403,17 @@ void App::toggleHidden()
     setOverlayHidden(!m_hidden);
 }
 
-void App::togglePause()
+void App::setPaused(bool paused)
 {
-    const PlaybackController *primary = primaryController();
-    const bool paused = primary ? !primary->paused() : true;
     for (const Profile *profile : std::as_const(m_profiles)) {
         profile->controller()->setPaused(paused);
     }
+}
+
+void App::togglePause()
+{
+    const PlaybackController *primary = primaryController();
+    setPaused(primary ? !primary->paused() : true);
 }
 
 void App::showSettings()
