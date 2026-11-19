@@ -11,23 +11,24 @@ Kirigami.ApplicationWindow {
     id: root
 
     readonly property var s: App.settings
-    // The trayClick and trayDoubleClick choices, in settings.kcfg order.
+    // The trayClick and trayDoubleClick choices; value is the index in settings.kcfg.
     readonly property var trayActions: [
-        {text: "Nothing", icon: "action-unavailable-symbolic"},
-        {text: "Open or close settings", icon: "configure"},
-        {text: "Play", icon: "media-playback-start"},
-        {text: "Pause", icon: "media-playback-pause"},
-        {text: "Previous", icon: "media-skip-backward"},
-        {text: "Next", icon: "media-skip-forward"},
-        {text: "Go to start of playlist", icon: "go-first"},
-        {text: "Go to end of playlist", icon: "go-last"},
-        {text: "Shuffle", icon: "media-playlist-shuffle"},
-        {text: "Rescan folders", icon: "view-refresh"},
-        {text: "Show or hide", icon: "visibility"},
-        {text: "Show", icon: "view-visible"},
-        {text: "Hide", icon: "view-hidden"},
-        {text: "Mute or unmute", icon: "audio-volume-muted"},
-        {text: "Prevent lock and sleep, or allow them", icon: "system-suspend-inhibited"}
+        {value: 0, text: "Nothing", icon: "action-unavailable-symbolic"},
+        {value: 1, text: "Open or close settings", icon: "configure"},
+        {value: 2, text: "Play", icon: "media-playback-start"},
+        {value: 3, text: "Pause", icon: "media-playback-pause"},
+        {value: 15, text: "Play or pause", icon: "media-playback-playing"},
+        {value: 4, text: "Previous", icon: "media-skip-backward"},
+        {value: 5, text: "Next", icon: "media-skip-forward"},
+        {value: 6, text: "Go to start of playlist", icon: "go-first"},
+        {value: 7, text: "Go to end of playlist", icon: "go-last"},
+        {value: 8, text: "Shuffle", icon: "media-playlist-shuffle"},
+        {value: 9, text: "Rescan folders", icon: "view-refresh"},
+        {value: 10, text: "Show or hide", icon: "visibility"},
+        {value: 11, text: "Show", icon: "view-visible"},
+        {value: 12, text: "Hide", icon: "view-hidden"},
+        {value: 13, text: "Mute or unmute", icon: "audio-volume-muted"},
+        {value: 14, text: "Prevent lock and sleep, or allow them", icon: "system-suspend-inhibited"}
     ]
 
     // A tray action picker: each choice with its icon, in the list and the box.
@@ -35,6 +36,7 @@ Kirigami.ApplicationWindow {
         id: box
         model: root.trayActions
         textRole: "text"
+        valueRole: "value"
         Kirigami.StyleHints.iconName: currentIndex >= 0 ? root.trayActions[currentIndex].icon : ""
         delegate: QQC2.MenuItem {
             required property var modelData
@@ -212,14 +214,14 @@ Kirigami.ApplicationWindow {
 
                         TrayActionBox {
                             Kirigami.FormData.label: "Click:"
-                            currentIndex: root.s.trayClick
-                            onActivated: index => root.s.trayClick = index
+                            currentIndex: indexOfValue(root.s.trayClick)
+                            onActivated: root.s.trayClick = currentValue
                         }
 
                         TrayActionBox {
                             Kirigami.FormData.label: "Double-click:"
-                            currentIndex: root.s.trayDoubleClick
-                            onActivated: index => root.s.trayDoubleClick = index
+                            currentIndex: indexOfValue(root.s.trayDoubleClick)
+                            onActivated: root.s.trayDoubleClick = currentValue
                         }
 
                         Kirigami.Separator {

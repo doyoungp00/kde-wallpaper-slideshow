@@ -43,9 +43,9 @@ paused" is off). Sleep you start yourself, or closing the lid, still works. It c
 computer goes to sleep.
 
 The Tray Icon section of the General tab sets what clicking and double-clicking the
-tray icon do: open or close settings (the default for a click), play, pause, previous,
-next, start or end of the playlist, shuffle, rescan folders, show or hide, mute or
-unmute, or turn preventing lock and sleep on or off. Previous, next, start and end act
+tray icon do: open or close settings (the default for a click), play, pause, play or
+pause, previous, next, start or end of the playlist, shuffle, rescan folders, show or
+hide, mute or unmute, or turn preventing lock and sleep on or off. Previous, next, start and end act
 on the primary screen; the others on every screen. When a double-click action is set,
 a single click waits the system's double-click interval before it acts.
 

@@ -87,6 +87,9 @@ void TrayController::run(int action)
     case A::Pause:
         m_app->setPaused(true);
         break;
+    case A::TogglePause:
+        m_app->togglePause();
+        break;
     // Moving through the playlist acts on the primary screen, like the D-Bus calls.
     case A::Previous:
         if (primary) {

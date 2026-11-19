@@ -19,13 +19,14 @@
     <entry name="pauseOnSleepOrLock" type="Bool"><default>false</default></entry>
     <entry name="hideOnSleepOrLock" type="Bool"><default>false</default></entry>
     <!-- What clicking and double-clicking the tray icon do. Both use the same
-         choices; TrayController reads both as EnumTrayClick. -->
+         choices; TrayController reads both as EnumTrayClick. New choices go at the end,
+         since the index is what is stored. -->
     <entry name="trayClick" type="Enum">
-      <choices><choice name="Nothing"/><choice name="OpenSettings"/><choice name="Play"/><choice name="Pause"/><choice name="Previous"/><choice name="Next"/><choice name="First"/><choice name="Last"/><choice name="Shuffle"/><choice name="Rescan"/><choice name="ToggleShown"/><choice name="Show"/><choice name="Hide"/><choice name="ToggleMute"/><choice name="TogglePreventSleep"/></choices>
+      <choices><choice name="Nothing"/><choice name="OpenSettings"/><choice name="Play"/><choice name="Pause"/><choice name="Previous"/><choice name="Next"/><choice name="First"/><choice name="Last"/><choice name="Shuffle"/><choice name="Rescan"/><choice name="ToggleShown"/><choice name="Show"/><choice name="Hide"/><choice name="ToggleMute"/><choice name="TogglePreventSleep"/><choice name="TogglePause"/></choices>
       <default>OpenSettings</default>
     </entry>
     <entry name="trayDoubleClick" type="Enum">
-      <choices><choice name="Nothing"/><choice name="OpenSettings"/><choice name="Play"/><choice name="Pause"/><choice name="Previous"/><choice name="Next"/><choice name="First"/><choice name="Last"/><choice name="Shuffle"/><choice name="Rescan"/><choice name="ToggleShown"/><choice name="Show"/><choice name="Hide"/><choice name="ToggleMute"/><choice name="TogglePreventSleep"/></choices>
+      <choices><choice name="Nothing"/><choice name="OpenSettings"/><choice name="Play"/><choice name="Pause"/><choice name="Previous"/><choice name="Next"/><choice name="First"/><choice name="Last"/><choice name="Shuffle"/><choice name="Rescan"/><choice name="ToggleShown"/><choice name="Show"/><choice name="Hide"/><choice name="ToggleMute"/><choice name="TogglePreventSleep"/><choice name="TogglePause"/></choices>
       <default>Nothing</default>
     </entry>
   </group>
