@@ -32,11 +32,17 @@ Kirigami.ApplicationWindow {
     ]
 
     // A tray action picker: each choice with its icon, in the list and the box.
+    // value is the setting; picked(value) reports a choice. The position is looked up
+    // here rather than with indexOfValue(), which gives -1 until the list has loaded
+    // and isn't evaluated again after that.
     component TrayActionBox: QQC2.ComboBox {
         id: box
+        property int value
+        signal picked(int value)
         model: root.trayActions
         textRole: "text"
-        valueRole: "value"
+        currentIndex: root.trayActions.findIndex(action => action.value === value)
+        onActivated: index => picked(root.trayActions[index].value)
         Kirigami.StyleHints.iconName: currentIndex >= 0 ? root.trayActions[currentIndex].icon : ""
         delegate: QQC2.MenuItem {
             required property var modelData
@@ -214,14 +220,14 @@ Kirigami.ApplicationWindow {
 
                         TrayActionBox {
                             Kirigami.FormData.label: "Click:"
-                            currentIndex: indexOfValue(root.s.trayClick)
-                            onActivated: root.s.trayClick = currentValue
+                            value: root.s.trayClick
+                            onPicked: value => root.s.trayClick = value
                         }
 
                         TrayActionBox {
                             Kirigami.FormData.label: "Double-click:"
-                            currentIndex: indexOfValue(root.s.trayDoubleClick)
-                            onActivated: root.s.trayDoubleClick = currentValue
+                            value: root.s.trayDoubleClick
+                            onPicked: value => root.s.trayDoubleClick = value
                         }
 
                         Kirigami.Separator {

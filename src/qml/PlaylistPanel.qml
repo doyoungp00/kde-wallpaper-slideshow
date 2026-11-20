@@ -38,7 +38,7 @@ Rectangle {
     }
 
     // Toggle beside the search field, sized to it where used.
-    component SearchToggle: ToolButton {
+    component PanelToggle: ToolButton {
         id: toggle
         font.bold: true
         // Not checkable: checked is bound to the state, so it follows other screens' toggles too.
@@ -172,7 +172,7 @@ Rectangle {
                 }
             }
 
-            SearchToggle {
+            PanelToggle {
                 Layout.preferredHeight: search.height
                 Layout.preferredWidth: search.height
                 text: ".*"
@@ -181,7 +181,7 @@ Rectangle {
                 ToolTip.text: "Use regular expression"
             }
 
-            SearchToggle {
+            PanelToggle {
                 Layout.preferredHeight: search.height
                 Layout.preferredWidth: search.height
                 readonly property var scope: panel.searchScopes[panel.settings.playlistSearchScope]
@@ -190,6 +190,16 @@ Rectangle {
                 checked: panel.settings.playlistSearchScope !== 0
                 onClicked: panel.changeSearch(() => panel.settings.playlistSearchScope = (panel.settings.playlistSearchScope + 1) % panel.searchScopes.length)
                 ToolTip.text: scope.tooltip + " (click to switch)"
+            }
+
+            PanelToggle {
+                Layout.preferredHeight: search.height
+                Layout.preferredWidth: search.height
+                icon.name: panel.settings.mute ? "audio-volume-muted" : "audio-volume-high"
+                // Lit while muted, like the search toggles are lit while they change the search.
+                checked: panel.settings.mute
+                onClicked: panel.settings.mute = !panel.settings.mute
+                ToolTip.text: panel.settings.mute ? "Unmute" : "Mute"
             }
         }
 

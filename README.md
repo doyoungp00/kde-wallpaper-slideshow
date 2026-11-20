@@ -59,7 +59,8 @@ its tab, for example to match a dark panel while the rest of the desktop is ligh
 
 Typing in the playlist's search box limits playback, prev/next included, to the
 matching files until the search is cleared. The `.*` button next to it makes the search a
-case-insensitive regular expression; an invalid one is shown in red and ignored.
+case-insensitive regular expression; an invalid one is shown in red and ignored. The speaker
+button at the end of the row mutes or unmutes that tab's videos.
 
 Settings can be saved to and loaded from a JSON file in the Settings File section.
 Export All on the General tab saves every setting, including the tabs of screens that
