@@ -31,6 +31,12 @@ Kirigami.ApplicationWindow {
         {value: 14, text: "Prevent lock and sleep, or allow them", icon: "system-suspend-inhibited"}
     ]
 
+    // A check box indented one level, for an option that refines the one above it.
+    component SubCheckBox: QQC2.CheckBox {
+        leftPadding: padding + (mirrored ? 0 : Kirigami.Units.gridUnit)
+        rightPadding: padding + (mirrored ? Kirigami.Units.gridUnit : 0)
+    }
+
     // A tray action picker: each choice with its icon, in the list and the box.
     // value is the setting; picked(value) reports a choice. The position is looked up
     // here rather than with indexOfValue(), which gives -1 until the list has loaded
@@ -194,11 +200,18 @@ Kirigami.ApplicationWindow {
                             onToggled: root.s.preventScreenOff = checked
                         }
 
-                        QQC2.CheckBox {
+                        SubCheckBox {
                             text: "Also while paused, if a video keeps playing"
                             enabled: root.s.preventSleep || root.s.preventScreenOff
                             checked: root.s.preventWhilePausedVideo
                             onToggled: root.s.preventWhilePausedVideo = checked
+                        }
+
+                        SubCheckBox {
+                            text: "Also while paused on an image"
+                            enabled: root.s.preventSleep || root.s.preventScreenOff
+                            checked: root.s.preventWhilePausedImage
+                            onToggled: root.s.preventWhilePausedImage = checked
                         }
 
                         QQC2.CheckBox {

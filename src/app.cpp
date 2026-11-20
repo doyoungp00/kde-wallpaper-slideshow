@@ -83,6 +83,7 @@ App::App(QQmlEngine *engine, QObject *parent)
     connect(s, &Settings::preventSleepChanged, this, &App::updateSuspension);
     connect(s, &Settings::preventScreenOffChanged, this, &App::updateSuspension);
     connect(s, &Settings::preventWhilePausedVideoChanged, this, &App::updateSuspension);
+    connect(s, &Settings::preventWhilePausedImageChanged, this, &App::updateSuspension);
     connect(s, &Settings::autostartChanged, this, &App::writeAutostart);
 
     connect(qApp, &QGuiApplication::screenAdded, this, [this] {
@@ -352,8 +353,10 @@ void App::updateSuspension()
         const bool suspended = !m_running || m_hidden || power || !shown;
         PlaybackController *controller = profile->controller();
         controller->setSuspended(suspended);
-        const bool pausedVideo = Settings::preventWhilePausedVideo() && controller->videoPlaying();
-        playing = playing || (!suspended && (!controller->paused() || pausedVideo));
+        // Paused can still count as playing: on a video that keeps playing, or on an image.
+        const bool pausedHolds = (Settings::preventWhilePausedVideo() && controller->videoPlaying())
+            || (Settings::preventWhilePausedImage() && controller->showingImage());
+        playing = playing || (!suspended && (!controller->paused() || pausedHolds));
     }
     // Plasma's screensaver inhibition also keeps the screen from dimming and turning
     // off. The power management one only blocks idle sleep, not sleep the user asks for.

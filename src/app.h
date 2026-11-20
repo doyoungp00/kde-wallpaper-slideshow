@@ -112,7 +112,7 @@ private:
     void destroyAllViews();
     QQuickWindow *createLayerWindow(const char *type, QScreen *screen, Profile *profile);
     // Suspends the profiles that shouldn't play, and holds the sleep and screen
-    // inhibitions while any of them plays (or, optionally, shows a playing video while paused).
+    // inhibitions while any of them plays (or, optionally, is paused on a playing video or an image).
     void updateSuspension();
     // Applies the pause and hide options for sleep and screen lock.
     void leaveForSleepOrLock();

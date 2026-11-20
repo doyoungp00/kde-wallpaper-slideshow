@@ -39,8 +39,10 @@ private Q_SLOTS:
         c.setSuspended(true);
         QVERIFY(!c.videoPlaying());
         c.setSuspended(false);
+        QVERIFY(!c.showingImage());
         c.jumpTo(1 - videoRow);
         QVERIFY(!c.videoPlaying());
+        QVERIFY(c.showingImage());
     }
 
     void unfilteredSteps()
